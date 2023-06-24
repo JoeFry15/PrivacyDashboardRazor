@@ -1,0 +1,62 @@
+﻿
+@page
+@model PrivacyDashboardRazor.Pages.AccountListModel
+@{
+    ViewData["Title"] = "Accounts List";
+}
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="text-center">
+    <h1 class="display-4">Account</h1>
+    <div class="account-table">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Website</th>
+                    <th>Email</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (var i = 0; i < Model.Accounts.Count; i++)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => Model.Accounts[i].Website)</td>
+                        <td>@Html.DisplayFor(modelItem => Model.Accounts[i].Email)</td>
+                        <td>
+                            <form method="post" asp-page-handler="ShowAccountUpdate" asp-route-id="@Model.Accounts[i].Id">
+                                <button type="submit">Edit</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <form method="post" asp-page-handler="ShowAccountUpdate" asp-route-id="-1">
+        <button type="submit">Add Account</button>
+    </form>
+
+    <div class="text-center modal" style="display:@Model.ShowAccountUpdate">
+        <form method="post" asp-page-handler="UpdateAccount">
+            <h3>@Model.GetModeHeading()</h3>
+            <div>
+                <label asp-for="AccountDetails.Website">Website:</label>
+                <input asp-for="AccountDetails.Website" class="form-control" value="@Model.GetPrefilledAccountValue().Website" />
+                <span asp-validation-for="AccountDetails.Website" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="AccountDetails.Email">Associated Email:</label>
+                <input asp-for="AccountDetails.Email" class="form-control" value="@Model.GetPrefilledAccountValue().Email" />
+                <span asp-validation-for="AccountDetails.Email" class="text-danger"></span>
+            </div>
+            <button type="submit">Ok</button>
+        </form>
+
+        <form method="post" asp-page-handler="ShowAccountUpdate">
+            <button type="submit">Cancel</button>
+        </form>
+    </div>
+
+</div>
